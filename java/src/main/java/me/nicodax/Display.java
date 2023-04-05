@@ -3,6 +3,7 @@ package me.nicodax;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JPanel;
 
+import static java.util.stream.Collectors.toSet;
 import static me.nicodax.CellStatus.ALIVE;
 
 @NoArgsConstructor(force = true)
@@ -53,8 +54,14 @@ public class Display extends JPanel implements KeyListener {
     }
 
     protected void setNextGenWithInfiniteGrid() {
-        // TO DO
-        nextGenLiveDisplayCells = new HashSet<>(currentLiveDisplayCells);
+        Set<Cell> currentLiveCells = currentLiveDisplayCells.stream()
+                .map(displayCell -> new Cell(displayCell.getCol(), displayCell.getRow()))
+                .collect(toSet());
+        Game game = new Game();
+        game.setLiveCells(currentLiveCells);
+        nextGenLiveDisplayCells = game.getNextGen().stream()
+                .map(cell -> new DisplayCell(this, cell.x(), cell.y()))
+                .collect(toSet());
     }
 
     protected void setNextGenWithFiniteGrid() {
