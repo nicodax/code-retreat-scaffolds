@@ -6,7 +6,7 @@ public class Main {
     private final static String FRAME_TITLE = "Conway's Game of Life";
     private final static Integer FRAME_SIZE = 800;
     private final static Integer GRID_SIZE = 20;
-    private final static Boolean INFINITE_GRID = true;
+    private final static Boolean INFINITE_GRID = false;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame(FRAME_TITLE);

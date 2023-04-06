@@ -59,10 +59,15 @@ public class Display extends JPanel implements KeyListener {
 
     protected void setNextGenWithFiniteGrid() {
         // TO DO
+        Game game = new Game(GRID_SIZE);
+        game.getGrid().forEach(
+                row -> row.forEach(cell -> cell.setStatus(displayedCells.get(cell.getY()).get(cell.getX()).getStatus()))
+        );
+        List<List<Cell>> nextGen = game.getNextGen();
         Set<DisplayCell> nextLiveDisplayCells = new HashSet<>();
-        displayedCells.forEach(row -> row.stream()
+        nextGen.forEach(row -> row.stream()
                 .filter(displayCell -> displayCell.getStatus().equals(ALIVE))
-                .forEach(nextLiveDisplayCells::add)
+                .forEach(cell -> nextLiveDisplayCells.add(new DisplayCell(this, cell.getX(), cell.getY())))
         );
         nextGenLiveDisplayCells = new HashSet<>(nextLiveDisplayCells);
     }
