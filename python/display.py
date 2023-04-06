@@ -34,6 +34,12 @@ class Display:
         column = x // (BUTTON_SIZE + BUTTON_MARGIN)
         # TO DO
         #   * what happens whenever a grid cell is clicked ?
+        cell_is_alive = (column, row) in self.game.live_cells
+        self.grid_colors[row][column] = BLACK if cell_is_alive else WHITE
+        if cell_is_alive:
+            self.game.live_cells.remove((column, row))
+        else:
+            self.game.live_cells.append((column, row))
 
     def handle_keydown(self, key):
         if key == pygame.K_SPACE:
@@ -47,6 +53,10 @@ class Display:
             next_gen = self.game.get_next_gen_infinite_grid()
             # TO DO (INFINITE GRID)
             #   * update self.grid_colors according to next generation
+            self.game.live_cells = next_gen
+            self.grid_colors = [[BLACK]*GRID_SIZE for _ in range(GRID_SIZE)]
+            for cell in next_gen:
+                self.grid_colors[cell[1]][cell[0]] = WHITE
         else:
             next_gen = self.game.get_next_gen_finite_grid()
             # TO DO (FINITE GRID)
