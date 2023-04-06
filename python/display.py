@@ -39,6 +39,7 @@ class Display:
         if key == pygame.K_SPACE:
             self.next_gen()
         if key == pygame.K_r:
+            self.reset_display()
             self.game.reset()
 
     def next_gen(self):
@@ -52,7 +53,6 @@ class Display:
             #   * update self.grid_colors according to next generation
 
     def reset_display(self):
-        self.screen.fill(WHITE)
         self.grid_colors = [[BLACK]*GRID_SIZE for _ in range(GRID_SIZE)]
 
 if __name__ == "__main__":
@@ -69,10 +69,13 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    display.handle_click(*event.pos)
             elif event.type == pygame.KEYDOWN:
                 display.handle_keydown(event.key)
 
-        display.reset_display()
+        screen.fill(WHITE)
         display.draw()
 
         pygame.display.flip()
