@@ -31,25 +31,3 @@ function next_gen {
   local new_grid=("${GRID[@]}")
   GRID=("${new_grid[@]}")
 }
-
-# EITHER:
-#   * initialize grid with custom values
-#   * use the init_grid_with_vertical_spinner function
-#   * use the init_grid_with_horizontal_spinner function
-#
-# GRID=("${INIT[@]}")
-init_grid_with_vertical_spinner
-# init_grid_with_horizontal_spinner
-
-
-# MAIN
-while true; do
-  clear
-  print_border
-  for (( r=0 ; r<$GRID_WIDTH ; r++ )); do
-    print_row "$r"
-    print_border
-  done
-  next_gen
-  sleep 2
-done
