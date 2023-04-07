@@ -20,8 +20,8 @@ public class DisplayCell extends JButton {
     @Getter
     private final Integer col;
 
-    public DisplayCell(Display game, Integer col, Integer row) {
-        this.display = game;
+    public DisplayCell(Display display, Integer col, Integer row) {
+        this.display = display;
         this.row = row;
         this.col = col;
         setUpJButton();
@@ -54,9 +54,9 @@ public class DisplayCell extends JButton {
 
     public Boolean isDisplayed() {
         return col >= 0 &&
-                col < display.GRID_SIZE &&
+                col < display.getGRID_SIZE() &&
                 row >= 0 &&
-                row < display.GRID_SIZE;
+                row < display.getGRID_SIZE();
     }
 
     @Override
@@ -64,6 +64,11 @@ public class DisplayCell extends JButton {
         if (o == this) return true;
         if (!(o instanceof DisplayCell other)) return false;
         return Objects.equals(other.col, col) && Objects.equals(other.row, row);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(col, row);
     }
 
     @Override

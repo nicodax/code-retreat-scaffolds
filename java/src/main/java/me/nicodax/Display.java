@@ -1,6 +1,8 @@
 package me.nicodax;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -13,14 +15,19 @@ import javax.swing.JPanel;
 
 import static me.nicodax.CellStatus.ALIVE;
 
+@NoArgsConstructor(force = true)
 public class Display extends JPanel implements KeyListener {
 
+    @Getter
     private final Boolean INFINITE_GRID;
+    @Getter
     private final List<List<DisplayCell>> displayedCells = new ArrayList<>();
     @Getter
     private Set<DisplayCell> currentLiveDisplayCells = new HashSet<>();
+    @Getter
     private Set<DisplayCell> nextGenLiveDisplayCells = new HashSet<>();
-    public final Integer GRID_SIZE;
+    @Getter
+    private final Integer GRID_SIZE;
 
     public Display(Integer gridSize, Boolean infiniteGrid) {
         this.INFINITE_GRID = infiniteGrid;
@@ -40,18 +47,18 @@ public class Display extends JPanel implements KeyListener {
         }
     }
 
-    private void setNextGen() {
-        if (INFINITE_GRID) setNextGenWithInfiniteGrid();
+    protected void setNextGen() {
+        if (getINFINITE_GRID()) setNextGenWithInfiniteGrid();
         else setNextGenWithFiniteGrid();
         displayNextGen();
     }
 
-    private void setNextGenWithInfiniteGrid() {
+    protected void setNextGenWithInfiniteGrid() {
         // TO DO
         nextGenLiveDisplayCells = new HashSet<>(currentLiveDisplayCells);
     }
 
-    private void setNextGenWithFiniteGrid() {
+    protected void setNextGenWithFiniteGrid() {
         // TO DO
         Set<DisplayCell> nextLiveDisplayCells = new HashSet<>();
         displayedCells.forEach(row -> row.stream()
@@ -70,7 +77,7 @@ public class Display extends JPanel implements KeyListener {
         nextGenLiveDisplayCells = new HashSet<>();
     }
 
-    private void reset() {
+    public void reset() {
         currentLiveDisplayCells = new HashSet<>();
         displayedCells.forEach(row -> row.forEach(DisplayCell::setDead));
     }
