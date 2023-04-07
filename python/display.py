@@ -12,7 +12,7 @@ BUTTON_SIZE = 50
 BUTTON_MARGIN = 4
 WINDOW_TITLE = "Conway's Game of Life"
 WINDOW_SIZE = (BUTTON_SIZE*GRID_SIZE + BUTTON_MARGIN*(GRID_SIZE + 1), BUTTON_SIZE*GRID_SIZE + BUTTON_MARGIN*(GRID_SIZE + 1))
-INFINITE_GRID=True
+INFINITE_GRID=False
 
 class Display:
 
@@ -32,8 +32,8 @@ class Display:
     def handle_click(self, x, y):
         row = y // (BUTTON_SIZE + BUTTON_MARGIN)
         column = x // (BUTTON_SIZE + BUTTON_MARGIN)
-        # TO DO
-        #   * what happens whenever a grid cell is clicked ?
+        self.grid_colors[row][column] = WHITE if self.game.grid[row][column] == 0 else BLACK
+        self.game.grid[row][column] = 1 if self.game.grid[row][column] == 0 else 0
 
     def handle_keydown(self, key):
         if key == pygame.K_SPACE:
@@ -49,8 +49,14 @@ class Display:
             #   * update self.grid_colors according to next generation
         else:
             next_gen = self.game.get_next_gen_finite_grid()
-            # TO DO (FINITE GRID)
-            #   * update self.grid_colors according to next generation
+            for y in range(GRID_SIZE):
+                for x in range(GRID_SIZE):
+                    if next_gen[y][x] == 1:
+                        self.grid_colors[y][x] = WHITE
+                    else:
+                        self.grid_colors[y][x] = BLACK
+            self.game.grid = next_gen
+
 
     def reset_display(self):
         self.grid_colors = [[BLACK]*GRID_SIZE for _ in range(GRID_SIZE)]
@@ -60,7 +66,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.display.set_caption(WINDOW_TITLE)
 
-    game = Game()
+    game = Game(GRID_SIZE)
     display = Display(screen, game)
 
     done = False
