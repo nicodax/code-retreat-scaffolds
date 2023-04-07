@@ -2,7 +2,6 @@ package me.nicodax;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
