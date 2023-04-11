@@ -10,7 +10,7 @@ test_init_display_grid_with_vertical_spinner() {
 }
 
 # IT SHOULD CREATE A 3x3 GRID WITH A HORIZONTAL SPINNER
-test_init_display_grid_with_vertical_spinner() {
+test_init_display_grid_with_horizontal_spinner() {
     init_display_grid_with_horizontal_spinner
     expected=(0 0 0 1 1 1 0 0 0)
     assertEquals 3 $DISPLAY_GRID_WIDTH
