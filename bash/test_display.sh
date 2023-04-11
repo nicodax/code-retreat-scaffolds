@@ -2,24 +2,24 @@
 . display.sh
 
 # IT SHOULD CREATE A 3x3 GRID WITH A VERTICAL SPINNER
-test_init_grid_with_vertical_spinner() {
-    init_grid_with_vertical_spinner
+test_init_display_grid_with_vertical_spinner() {
+    init_display_grid_with_vertical_spinner
     expected=(0 1 0 0 1 0 0 1 0)
-    assertEquals 3 $GRID_WIDTH
-    assertEquals "${expected[*]}" "${GRID[*]}"
+    assertEquals 3 $DISPLAY_GRID_WIDTH
+    assertEquals "${expected[*]}" "${DISPLAY_GRID[*]}"
 }
 
 # IT SHOULD CREATE A 3x3 GRID WITH A HORIZONTAL SPINNER
-test_init_grid_with_vertical_spinner() {
-    init_grid_with_horizontal_spinner
+test_init_display_grid_with_vertical_spinner() {
+    init_display_grid_with_horizontal_spinner
     expected=(0 0 0 1 1 1 0 0 0)
-    assertEquals 3 $GRID_WIDTH
-    assertEquals "${expected[*]}" "${GRID[*]}"
+    assertEquals 3 $DISPLAY_GRID_WIDTH
+    assertEquals "${expected[*]}" "${DISPLAY_GRID[*]}"
 }
 
 # IT SHOULD PRINT THE GRID BORDER DEPENDING ON THE GRID SIZE
 test_print_border() {
-    GRID_WIDTH=4
+    DISPLAY_GRID_WIDTH=4
 
     tmpfile=$(mktemp /tmp/test_print_border.XXXXXX)
     print_border > "$tmpfile"
@@ -33,7 +33,7 @@ test_print_border() {
 
 # IT SHOULD PRINT THE REQUESTED ROW
 test_print_row() {
-    init_grid_with_horizontal_spinner
+    init_display_grid_with_horizontal_spinner
 
     tmpfile=$(mktemp /tmp/test_print_row.XXXXXX)
 
