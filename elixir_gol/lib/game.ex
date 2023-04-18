@@ -80,13 +80,18 @@ defmodule Game do
   @spec get_live_neighbors_of(cell_t, [cell_t]) :: integer
   def get_live_neighbors_of(cell, live_cells) do
     neighbors = get_neighbors_of(cell)
-    alive? = &(Enum.member?(live_cells, &1))
-    live_neighbors = Enum.filter(neighbors, alive?)
+    live_neighbors = Enum.filter(neighbors, fn cell -> alive?(cell, live_cells) end)
     length(live_neighbors)
+  end
+
+  @spec alive?(cell_t, [cell_t]) :: boolean
+  def alive?(cell, live_cells) do
+    Enum.member?(live_cells, cell)
   end
 
   @doc """
   Gets given cell's next based of gol's rules
+  
   ## Examples
 
       iex> Game.get_next_state_of(%{x: 0, y: 0}, [%{x: 1, y: 0}, %{x: 1, y: 1}, %{x: 1, y: 2}])
@@ -95,14 +100,11 @@ defmodule Game do
   @spec get_next_state_of(cell_t, [cell_t]) :: boolean
   def get_next_state_of(cell, live_cells) do
     live_neighbor_count = get_live_neighbors_of(cell, live_cells)
-    alive? = &(Enum.member?(live_cells, &1))
     cond do
-      alive?.(cell) and live_neighbor_count >= 2 and live_neighbor_count <= 3 ->
-        true
-      not alive?.(cell) and live_neighbor_count == 3 ->
+      alive?(cell, live_cells) and live_neighbor_count >= 2 and live_neighbor_count <= 3 ->
         true
       true ->
-        false
+        not alive?(cell, live_cells) and live_neighbor_count == 3
     end
   end
 
@@ -131,18 +133,20 @@ defmodule Game do
   """
   @spec get_cells_to_check([cell_t]) :: [cell_t]
   def get_cells_to_check(live_cells) do
-    live_cells_neighbors_duplicates = Enum.reduce(live_cells, [], fn(cell, acc) -> acc ++ get_neighbors_of(cell) end)
-    cells_to_check_duplicates = live_cells_neighbors_duplicates ++ live_cells
-    cells_to_check = Enum.uniq(cells_to_check_duplicates)
-    compare_cells = fn cell1, cell2 ->
-      cond do
-        cell1.y != cell2.y ->
-          cell1.y < cell2.y
-        true ->
-          cell1.x < cell2.x
-      end
+    live_cells
+    |> Enum.reduce([], &(&2 ++ get_neighbors_of(&1)))
+    |> Enum.uniq()
+    |> Enum.sort(&compare_cells/2)
+  end
+
+  @spec compare_cells(cell_t, cell_t) :: boolean
+  defp compare_cells(cell1, cell2) do
+    cond do
+      cell1.y != cell2.y ->
+        cell1.y < cell2.y
+      true ->
+        cell1.x < cell2.x
     end
-    Enum.sort(cells_to_check, compare_cells)
   end
 
   @doc """
@@ -158,7 +162,8 @@ defmodule Game do
   """
   @spec get_next_gen([cell_t]) :: [cell_t]
   def get_next_gen(live_cells) do
-    cells_to_check = get_cells_to_check(live_cells)
-    Enum.filter(cells_to_check, fn cell -> get_next_state_of(cell, live_cells) end)
+    live_cells
+    |> get_cells_to_check()
+    |> Enum.filter(&get_next_state_of(&1, live_cells))
   end
 end
